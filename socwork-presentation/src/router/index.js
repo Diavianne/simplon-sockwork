@@ -14,6 +14,11 @@ const router = createRouter({
 			name: "account-create",
 			component: () => import("../views/AccountCreateView.vue"),
 		},
+		{
+			path: "/se-connecter",
+			name: "signin",
+			component: () => import("../views/AccountSignInView.vue"),
+		},
 		{ path: "/:pathMatch(.*)*", name: "NotFound", component: NotFoundView },
 	],
 });

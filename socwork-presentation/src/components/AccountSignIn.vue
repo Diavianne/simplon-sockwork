@@ -14,11 +14,11 @@ export default {
         },
         body: JSON.stringify(this.inputs),
       };
-      const response = await fetch("http://localhost:8080/accounts", options);
+      const response = await fetch("http://localhost:8080/signin", options);
       if (response.ok) {
-        alert("Compte créé avec succès");
+        alert("Sign in successful");
       } else {
-        console.error("Dev is a failure!");
+        console.error("Sign in failed");
       }
     },
   },
@@ -26,7 +26,7 @@ export default {
 </script>
 
 <template>
-  <h1>Créer un compte</h1>
+  <h1>Se connecter</h1>
   <form @submit.prevent="submit" novalidate>
     <label for="username">Nom d'utilisateur</label>
     <input
@@ -43,7 +43,7 @@ export default {
       v-model="inputs.password"
     />
     <div>
-      <button type="submit">Créer un compte</button>
+      <button type="submit">Sign In</button>
     </div>
   </form>
 </template>
