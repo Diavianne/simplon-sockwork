@@ -1,15 +1,13 @@
 package co.simplon.socworkbusiness.entities;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 
 @MappedSuperclass
 abstract class AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private long id;
 
     public long getId() {
@@ -17,10 +15,9 @@ abstract class AbstractEntity {
     }
 
     public AbstractEntity() {
-	// TODO Auto-generated constructor stub
     }
 
-    @SuppressWarnings("unused")
+   @SuppressWarnings("unused")
     private void setId(long id) {
 	this.id = id;
     }
