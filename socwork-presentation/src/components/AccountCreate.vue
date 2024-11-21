@@ -1,16 +1,14 @@
 <script>
 export default {
   data() {
-    //data-binding: comment lier data avec template,
+    
     return {
       inputs: { username: "", password: "" },
     };
   },
   methods: {
     async submit() {
-      //   event.preventDefault();
-      // console.log(this.inputs);
-      //REMPLACER BY AXIOS
+      
       const options = {
         method: "POST",
         headers: {
