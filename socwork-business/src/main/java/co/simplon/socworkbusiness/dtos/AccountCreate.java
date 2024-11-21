@@ -1,9 +1,13 @@
 package co.simplon.socworkbusiness.dtos;
 
-public record AccountCreate(String username, String password) {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public record AccountCreate(@NotBlank @Size(max = 225) String username, @NotBlank String password) {
+
     @Override
     public String toString() {
-        return String.format("{username='%s', password=[PROTECTED]}", username, password);
+	return "{username=" + username + ", password=[PROTECTED]}";
     }
 
 }

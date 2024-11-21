@@ -1,1 +1,1 @@
-{"resources":{"Scripts/Script.sql":{"default-datasource":"postgres-jdbc-1934699c20c-11c090d71f30c2d6"}}}
+{"resources":{"Scripts/Script.sql":{"default-schema":"public","default-datasource":"postgres-jdbc-1934699c20c-11c090d71f30c2d6","default-catalog":"socwork_db"},"Scripts/data.dml.sql":{"default-schema":"public","default-datasource":"postgres-jdbc-1934699c20c-11c090d71f30c2d6","default-catalog":"socwork_db"}}}

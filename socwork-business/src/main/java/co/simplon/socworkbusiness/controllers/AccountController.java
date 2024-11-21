@@ -1,7 +1,5 @@
 package co.simplon.socworkbusiness.controllers;
 
-import co.simplon.socworkbusiness.dtos.AccountSignIn;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,8 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.simplon.socworkbusiness.dtos.AccountAuthentificate;
 import co.simplon.socworkbusiness.dtos.AccountCreate;
 import co.simplon.socworkbusiness.services.AccountService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/accounts")
@@ -27,9 +27,9 @@ public class AccountController {
 	service.create(inputs);
     }
 
-    @PostMapping("/signin")
+    @PostMapping("/authentificate")
     @ResponseStatus(HttpStatus.CREATED)
-    Object login(@RequestBody AccountSignIn inputs) {
-            return service.signin(inputs);
+    Object authentificate(@RequestBody AccountAuthentificate inputs) {
+	return service.authentificate(inputs);
     }
 }

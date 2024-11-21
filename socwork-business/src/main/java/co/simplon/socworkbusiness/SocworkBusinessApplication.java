@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 public class SocworkBusinessApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SocworkBusinessApplication.class, args);
+	SpringApplication.run(SocworkBusinessApplication.class, args);
     }
 
 }
