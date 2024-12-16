@@ -44,7 +44,7 @@ public class Config {
 	};
     }
 
-    // injection dependences
+
     @Bean
     public PasswordEncoder encoder() {
 	return new BCryptPasswordEncoder(cost);
@@ -63,30 +63,17 @@ public class Config {
 	return decoder;
     }
 
-    @Bean // Change default behaviour
+    @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-	// Default Spring behaviour: PoLP (no authorization at all)
-	// Relies on JWT
-	// authorize some requests or not
-	// ???
-// V1: my version
-//	return http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
-//		.authorizeHttpRequests(authorize -> authorize.requestMatchers("/accounts", "/accounts/authenticate")
-//			.permitAll().anyRequest().authenticated())
-//		.oauth2ResourceServer((srv) -> srv.jwt(Customizer.withDefaults())).build();
 
-//	V2 : Correction by Frank
 	return http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
-		// Multiple matchers to map verbs + paths + authorizations
-		// "authorizations": anonymous, permit, deny and more...
-		// By configuration (filterChain), also by annotations...
+
 		.authorizeHttpRequests((req) -> req
 			.requestMatchers(HttpMethod.POST, "/accounts", "/accounts/authenticate").anonymous())
-		// Always last rule:
+
 		.authorizeHttpRequests((reqs) -> reqs.anyRequest().authenticated())
 		.oauth2ResourceServer((srv) -> srv.jwt(Customizer.withDefaults()))
-		// The build method builds the configured SecurityFilterChain
-		// with all the specified configuration
+
 		.build();
     }
 
