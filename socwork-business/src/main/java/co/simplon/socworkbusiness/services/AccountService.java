@@ -17,7 +17,7 @@ public class AccountService {
 
     private final AccountRepository repos;
     private final PasswordEncoder passwordEncoder;
-    private JwtProvider jwtProvider;
+    private final JwtProvider jwtProvider;
 
     public AccountService(AccountRepository repos, PasswordEncoder passwordEncoder, JwtProvider jwtProvider) {
 	this.repos = repos;
@@ -39,15 +39,16 @@ public class AccountService {
 	Account account = repos.findAllByUsernameIgnoreCase(username)
 		.orElseThrow(() -> new BadCredentialsException(username));
 
-	String password = inputs.password();
-	Boolean isMatchesPassword = passwordEncoder.matches(password, account.getPassword());
-	if (isMatchesPassword == false) {
+	String row = inputs.password();
+	String encoded = account.getPassword();
+	if (!passwordEncoder.matches(row, encoded)) {
 	    throw new BadCredentialsException(username);
 	}
 
-	String jwtToken = jwtProvider.create(username);
-	System.out.println(jwtToken);
+	return jwtProvider.create(username);
+    }
 
-	return jwtToken;
+    public String getAccount() {
+	return "Thao";
     }
 }

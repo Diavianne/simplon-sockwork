@@ -1,5 +1,6 @@
 package co.simplon.socworkbusiness.controllers;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,5 +17,10 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex, WebRequest request) {
 
 	return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    protected ResponseEntity<Object> handleDataAccessException(DataAccessException ex, WebRequest request) {
+	return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 }

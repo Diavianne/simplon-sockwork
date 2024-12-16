@@ -70,7 +70,7 @@ form {
   width: 20%;
 }
 h1 {
-  color: blue;
+  color: rgb(203, 8, 134);
 }
 label::after {
   content: "*";

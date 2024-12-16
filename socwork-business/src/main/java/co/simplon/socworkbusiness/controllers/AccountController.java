@@ -1,6 +1,7 @@
 package co.simplon.socworkbusiness.controllers;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,9 +28,15 @@ public class AccountController {
 	service.create(inputs);
     }
 
-    @PostMapping("/authentificate")
+    @PostMapping("/authenticate")
     @ResponseStatus(HttpStatus.CREATED)
     Object authentificate(@RequestBody AccountAuthentificate inputs) {
 	return service.authentificate(inputs);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    String getAccount() {
+	return service.getAccount();
     }
 }
