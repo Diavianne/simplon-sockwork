@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -32,6 +33,12 @@ public class Config {
 
     @Value("${co.simplon.socwork.secret}")
     private String secret;
+
+    @Value("${co.simplon.socwork.timeExp}")
+    private Long time;
+
+    @Value("${co.simplon.socwork.jwt.issuer}")
+    private String issuer;
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -53,14 +60,15 @@ public class Config {
     @Bean
     JwtProvider jwtProvider() {
 	Algorithm algorithm = Algorithm.HMAC256(secret);
-	return new JwtProvider(algorithm);
+	return new JwtProvider(algorithm, time, issuer);
     }
 
     @Bean
     JwtDecoder jwtDecoder() { // Tell Spring how to verify JWT signature
 	SecretKey secretKey = new SecretKeySpec(secret.getBytes(), "HMACSHA256");
 	NimbusJwtDecoder decoder = NimbusJwtDecoder.withSecretKey(secretKey).macAlgorithm(MacAlgorithm.HS256).build();
-	return decoder;
+    decoder.setJwtValidator(JwtValidators.createDefaultWithIssuer("my-issuer"));
+    return decoder;
     }
 
     @Bean

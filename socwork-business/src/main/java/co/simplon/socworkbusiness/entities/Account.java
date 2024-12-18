@@ -1,41 +1,72 @@
 package co.simplon.socworkbusiness.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "t_accounts")
 public class Account extends AbstractEntity {
 
-    @Column(name = "username")
-    private String username;
+    @Column(name = "user_name")
+    private String userName;
 
     @Column(name = "password")
     private String password;
 
+    @ManyToMany
+    @JoinTable(
+            name = "t_accounts_roles",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<Role>();
+
     public Account() {
     }
 
-    public String getUsername() {
-	return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-	this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {
-	return password;
+        return password;
     }
 
     public void setPassword(String password) {
-	this.password = password;
+        this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     @Override
     public String toString() {
-	return "{username=" + username + ", password= [PROTECTED]";
+        return "Account [userName=" + userName + ", password= PROTECTED " + ", roles=" + roles + "]";
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        return obj instanceof Account other
+                && this.userName.equals(other.userName);
+    }
+
+
+    public void setUsername(@NotBlank @Size(max = 225) String username) {
+    }
 }
