@@ -27,32 +27,32 @@ public class Account extends AbstractEntity {
     }
 
     public String getUsername() {
-	return username;
+        return username;
     }
 
     public void setUsername(String username) {
-	this.username = username;
+        this.username = username;
     }
 
     public String getPassword() {
-	return password;
+        return password;
     }
 
     public void setPassword(String password) {
-	this.password = password;
+        this.password = password;
     }
 
     public Set<Role> getRoles() {
-	return roles;
+        return roles;
     }
 
     public void setRoles(Set<Role> roles) {
-	this.roles = roles;
+        this.roles = roles;
     }
 
     @Override
     public String toString() {
-	return "{username=" + username + ", password= [PROTECTED]";
+        return "{username=" + username + ", password= [PROTECTED]";
     }
 
 }

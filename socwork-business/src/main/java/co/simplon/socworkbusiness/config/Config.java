@@ -44,44 +44,45 @@ public class Config {
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
-	return new WebMvcConfigurer() {
+        return new WebMvcConfigurer() {
 
-	    @Override
-	    public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**").allowedMethods("GET", "POST", "PATCH", "PUT").allowedOrigins(origins);
-	    }
-	};
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**").allowedMethods("GET", "POST", "PATCH", "PUT").allowedOrigins(origins);
+            }
+        };
     }
 
-    // injection dependences
+
     @Bean
     public PasswordEncoder encoder() {
-	return new BCryptPasswordEncoder(cost);
+        return new BCryptPasswordEncoder(cost);
     }
 
     @Bean
     JwtProvider jwtProvider() {
-	Algorithm algorithm = Algorithm.HMAC256(secret);
-	return new JwtProvider(algorithm, time, issuer);
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+        return new JwtProvider(algorithm, time, issuer);
     }
 
     @Bean
     JwtDecoder jwtDecoder() { // Tell Spring how to verify JWT signature
-	SecretKey secretKey = new SecretKeySpec(secret.getBytes(), "HMACSHA256");
-	NimbusJwtDecoder decoder = NimbusJwtDecoder.withSecretKey(secretKey).macAlgorithm(MacAlgorithm.HS256).build();
+        SecretKey secretKey = new SecretKeySpec(secret.getBytes(), "HMACSHA256");
+        NimbusJwtDecoder decoder = NimbusJwtDecoder.withSecretKey(secretKey).macAlgorithm(MacAlgorithm.HS256).build();
 
-	OAuth2TokenValidator<Jwt> validator = JwtValidators.createDefaultWithIssuer(issuer);
-	// here
-	decoder.setJwtValidator(validator);
-	return decoder;
+        OAuth2TokenValidator<Jwt> validator = JwtValidators.createDefaultWithIssuer(issuer);
+        // here
+        decoder.setJwtValidator(validator);
+        return decoder;
     }
 
-    @Bean // Change default behaviour
+    @Bean
+        // Change default behaviour
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-	// Default Spring behaviour: PoLP (no authorization at all)
-	// Relies on JWT
-	// authorize some requests or not
-	// ???
+        // Default Spring behaviour: PoLP (no authorization at all)
+        // Relies on JWT
+        // authorize some requests or not
+        // ???
 // V1: my version
 //	return http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
 //		.authorizeHttpRequests(authorize -> authorize.requestMatchers("/accounts", "/accounts/authenticate")
@@ -89,18 +90,18 @@ public class Config {
 //		.oauth2ResourceServer((srv) -> srv.jwt(Customizer.withDefaults())).build();
 
 //	V2 : Correction by Frank
-	return http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
-		// Multiple matchers to map verbs + paths + authorizations
-		// "authorizations": anonymous, permit, deny and more...
-		// By configuration (filterChain), also by annotations...
-		.authorizeHttpRequests((req) -> req
-			.requestMatchers(HttpMethod.POST, "/accounts", "/accounts/authenticate").anonymous())
-		// Always last rule:
-		.authorizeHttpRequests((reqs) -> reqs.anyRequest().authenticated())
-		.oauth2ResourceServer((srv) -> srv.jwt(Customizer.withDefaults()))
-		// The build method builds the configured SecurityFilterChain
-		// with all the specified configuration
-		.build();
+        return http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
+                // Multiple matchers to map verbs + paths + authorizations
+                // "authorizations": anonymous, permit, deny and more...
+                // By configuration (filterChain), also by annotations...
+                .authorizeHttpRequests((req) -> req
+                        .requestMatchers(HttpMethod.POST, "/accounts", "/accounts/authenticate").anonymous())
+                // Always last rule:
+                .authorizeHttpRequests((reqs) -> reqs.anyRequest().authenticated())
+                .oauth2ResourceServer((srv) -> srv.jwt(Customizer.withDefaults()))
+                // The build method builds the configured SecurityFilterChain
+                // with all the specified configuration
+                .build();
     }
 
 }

@@ -26,43 +26,43 @@ public class AccountService {
     private final RoleRepository roleRepos;
 
     public AccountService(AccountRepository repos, PasswordEncoder passwordEncoder, JwtProvider jwtProvider,
-	    RoleRepository roleRepos) {
-	this.repos = repos;
-	this.passwordEncoder = passwordEncoder;
-	this.jwtProvider = jwtProvider;
-	this.roleRepos = roleRepos;
+                          RoleRepository roleRepos) {
+        this.repos = repos;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtProvider = jwtProvider;
+        this.roleRepos = roleRepos;
     }
 
     @Transactional
     public void create(AccountCreate inputs) {
-	Account entity = new Account();
-	entity.setUsername(inputs.username());
-	entity.setPassword(passwordEncoder.encode(inputs.password()));
+        Account entity = new Account();
+        entity.setUsername(inputs.username());
+        entity.setPassword(passwordEncoder.encode(inputs.password()));
 
-	Set<Role> roles = roleRepos.findByIsDefaultTrue();
-	entity.setRoles(roles);
+        Set<Role> roles = roleRepos.findByIsDefaultTrue();
+        entity.setRoles(roles);
 
-	repos.save(entity);
+        repos.save(entity);
     }
 
     @Transactional
     public Object authentificate(AccountAuthentificate inputs) {
-	String username = inputs.username();
-	Account account = repos.findAllByUsernameIgnoreCase(username)
-		.orElseThrow(() -> new BadCredentialsException(username));
+        String username = inputs.username();
+        Account account = repos.findAllByUsernameIgnoreCase(username)
+                .orElseThrow(() -> new BadCredentialsException(username));
 
-	List<String> roles = account.getRoles().stream().map(r -> r.getRole()).toList();
+        List<String> roles = account.getRoles().stream().map(r -> r.getRole()).toList();
 
-	String row = inputs.password();
-	String encoded = account.getPassword();
-	if (!passwordEncoder.matches(row, encoded)) {
-	    throw new BadCredentialsException(username);
-	}
+        String row = inputs.password();
+        String encoded = account.getPassword();
+        if (!passwordEncoder.matches(row, encoded)) {
+            throw new BadCredentialsException(username);
+        }
 
-	return jwtProvider.create(username, roles);
+        return jwtProvider.create(username, roles);
     }
 
     public String getAccount() {
-	return "Account";
+        return "Account";
     }
 }

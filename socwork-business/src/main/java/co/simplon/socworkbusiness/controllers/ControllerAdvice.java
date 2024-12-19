@@ -16,11 +16,11 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     protected ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex, WebRequest request) {
 
-	return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+        return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 
     @ExceptionHandler(DataAccessException.class)
     protected ResponseEntity<Object> handleDataAccessException(DataAccessException ex, WebRequest request) {
-	return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.CONFLICT, request);
+        return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 }

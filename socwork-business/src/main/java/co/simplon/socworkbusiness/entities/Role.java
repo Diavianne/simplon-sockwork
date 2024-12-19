@@ -19,19 +19,19 @@ public class Role extends AbstractEntity {
     }
 
     public String getRole() {
-	return role;
+        return role;
     }
 
     public void setRole(String role) {
-	this.role = role;
+        this.role = role;
     }
 
     public Boolean getIsDefault() {
-	return isDefault;
+        return isDefault;
     }
 
     public void setIsDefault(Boolean isDefault) {
-	this.isDefault = isDefault;
+        this.isDefault = isDefault;
     }
 
 }
