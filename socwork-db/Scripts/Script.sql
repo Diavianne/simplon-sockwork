@@ -15,7 +15,7 @@ CREATE TABLE t_accounts (
 
 CREATE TABLE t_roles(
 	id INT GENERATED ALWAYS AS IDENTITY,
-    name VARCHAR (72) NOT NUL,
+    name VARCHAR (72) NOT NULL,
     "default" boolean DEFAULT false,
     CONSTRAINT t_role_pkey PRIMARY KEY (id),
     CONSTRAINT t_role_ukey unique (name)
@@ -32,6 +32,8 @@ CREATE TABLE t_accounts_roles (
 
 
 SELECT * FROM t_accounts;
+SELECT * FROM t_roles;
+SELECT * FROM t_accounts_roles;
 
 
 

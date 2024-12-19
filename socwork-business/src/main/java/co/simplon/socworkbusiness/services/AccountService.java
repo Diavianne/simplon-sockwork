@@ -39,11 +39,6 @@ public class AccountService {
 	entity.setUsername(inputs.username());
 	entity.setPassword(passwordEncoder.encode(inputs.password()));
 
-	// save roles
-//Optional Map Optional<Role> to Role
-	// Set<Role> roles = inputs.roles().stream().map(roleRepos::findByRole)
-//		.collect(Collectors.toSet());
-	// findByActiveTrue()
 	Set<Role> roles = roleRepos.findByIsDefaultTrue();
 	entity.setRoles(roles);
 
@@ -53,7 +48,6 @@ public class AccountService {
     @Transactional
     public Object authentificate(AccountAuthentificate inputs) {
 	String username = inputs.username();
-	// List<String> roles = inputs.roles().stream().map(r -> r.getRole()).toList();
 	Account account = repos.findAllByUsernameIgnoreCase(username)
 		.orElseThrow(() -> new BadCredentialsException(username));
 

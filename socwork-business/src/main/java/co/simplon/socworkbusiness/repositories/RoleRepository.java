@@ -14,8 +14,4 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
     Set<Role> findByIsDefaultTrue();
 
-    // Set<Role> findByRoleIsDefault(
-
-    // );
-
 }

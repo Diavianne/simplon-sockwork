@@ -20,7 +20,7 @@ public class Account extends AbstractEntity {
     private String password;
 
     @ManyToMany
-    @JoinTable(name = "t_access", joinColumns = @JoinColumn(name = "account_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "t_accounts_roles", joinColumns = @JoinColumn(name = "account_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
     public Account() {

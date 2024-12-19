@@ -8,14 +8,14 @@ import jakarta.persistence.Table;
 @Table(name = "t_roles")
 public class Role extends AbstractEntity {
 
-    @Column(name = "role")
+    @Column(name = "name")
     private String role;
 
-    @Column(name = "is_default")
+    @Column(name = "default")
     private Boolean isDefault;
 
     public Role() {
-	// ORM
+
     }
 
     public String getRole() {
