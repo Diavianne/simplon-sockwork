@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS t_accounts;
 DROP TABLE IF EXISTS t_roles;
+DROP TABLE IF EXISTS t_accounts_roles;
 
 
 
