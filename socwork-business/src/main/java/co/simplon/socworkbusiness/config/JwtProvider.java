@@ -14,19 +14,19 @@ public class JwtProvider {
     private final String issuer;
 
     JwtProvider(Algorithm algorithm, Long exp, String issuer) {
-        this.algorithm = algorithm;
-        this.exp = exp;
-        this.issuer = issuer;
+	this.algorithm = algorithm;
+	this.exp = exp;
+	this.issuer = issuer;
     }
 
     public String create(String subject, List<String> roles) {
-        Instant issuedAt = Instant.now();
-        Builder builder = JWT.create().withIssuedAt(issuedAt).withSubject(subject).withIssuer(issuer).withClaim("roles",
-                roles);
+	Instant issuedAt = Instant.now();
+	Builder builder = JWT.create().withIssuedAt(issuedAt).withSubject(subject).withIssuer(issuer).withClaim("roles",
+		roles);
 
-        if (exp > 0) {
-            builder.withExpiresAt(new Date(System.currentTimeMillis() + exp));
-        }
-        return builder.sign(algorithm);
+	if (exp > 0) {
+	    builder.withExpiresAt(new Date(System.currentTimeMillis() + exp));
+	}
+	return builder.sign(algorithm);
     }
 }

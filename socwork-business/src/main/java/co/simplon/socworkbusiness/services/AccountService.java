@@ -1,7 +1,8 @@
 package co.simplon.socworkbusiness.services;
 
-import co.simplon.socworkbusiness.entities.Role;
-import co.simplon.socworkbusiness.repositories.RoleRepository;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,50 +12,58 @@ import co.simplon.socworkbusiness.config.JwtProvider;
 import co.simplon.socworkbusiness.dtos.AccountAuthentificate;
 import co.simplon.socworkbusiness.dtos.AccountCreate;
 import co.simplon.socworkbusiness.entities.Account;
+import co.simplon.socworkbusiness.entities.Role;
 import co.simplon.socworkbusiness.repositories.AccountRepository;
-
-import java.util.List;
-import java.util.Set;
+import co.simplon.socworkbusiness.repositories.RoleRepository;
 
 @Service
 @Transactional(readOnly = true)
 public class AccountService {
 
-    private final AccountRepository repo;
+    private final AccountRepository repos;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
-	private final RoleRepository roleRepo;
+    private final RoleRepository roleRepos;
 
-    public AccountService(AccountRepository repo, PasswordEncoder passwordEncoder, JwtProvider jwtProvider, RoleRepository roleRepository) {
-	this.repo = repo;
+    public AccountService(AccountRepository repos, PasswordEncoder passwordEncoder, JwtProvider jwtProvider,
+	    RoleRepository roleRepos) {
+	this.repos = repos;
 	this.passwordEncoder = passwordEncoder;
 	this.jwtProvider = jwtProvider;
-	this.roleRepo = roleRepository;
+	this.roleRepos = roleRepos;
     }
 
-	@Transactional
-	public void create(AccountCreate inputs) {
+    @Transactional
+    public void create(AccountCreate inputs) {
+	Account entity = new Account();
+	entity.setUsername(inputs.username());
+	entity.setPassword(passwordEncoder.encode(inputs.password()));
 
-		Account entity = new Account();
-		entity.setUsername(inputs.username());
-		entity.setPassword(passwordEncoder.encode(inputs.password()));
-		Set<Role> roles = roleRepo.findByIsDefaultTrue();
-		entity.setRoles(roles);
-		repo.save(entity);
-	}
+	// save roles
+//Optional Map Optional<Role> to Role
+	// Set<Role> roles = inputs.roles().stream().map(roleRepos::findByRole)
+//		.collect(Collectors.toSet());
+	// findByActiveTrue()
+	Set<Role> roles = roleRepos.findByIsDefaultTrue();
+	entity.setRoles(roles);
+
+	repos.save(entity);
+    }
 
     @Transactional
     public Object authentificate(AccountAuthentificate inputs) {
 	String username = inputs.username();
-	Account account = repo.findAllByUsernameIgnoreCase(username)
+	// List<String> roles = inputs.roles().stream().map(r -> r.getRole()).toList();
+	Account account = repos.findAllByUsernameIgnoreCase(username)
 		.orElseThrow(() -> new BadCredentialsException(username));
+
+	List<String> roles = account.getRoles().stream().map(r -> r.getRole()).toList();
 
 	String row = inputs.password();
 	String encoded = account.getPassword();
 	if (!passwordEncoder.matches(row, encoded)) {
 	    throw new BadCredentialsException(username);
 	}
-		Set<String> roles = account.getRoles().stream().map(r -> r.getRole().toString()).toList();
 
 	return jwtProvider.create(username, roles);
     }

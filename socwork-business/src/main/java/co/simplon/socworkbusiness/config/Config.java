@@ -12,7 +12,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -37,7 +39,7 @@ public class Config {
     @Value("${co.simplon.socwork.timeExp}")
     private Long time;
 
-    @Value("${co.simplon.socwork.jwt.issuer}")
+    @Value("${co.simplon.socwork.issuer}")
     private String issuer;
 
     @Bean
@@ -51,7 +53,7 @@ public class Config {
 	};
     }
 
-
+    // injection dependences
     @Bean
     public PasswordEncoder encoder() {
 	return new BCryptPasswordEncoder(cost);
@@ -67,21 +69,37 @@ public class Config {
     JwtDecoder jwtDecoder() { // Tell Spring how to verify JWT signature
 	SecretKey secretKey = new SecretKeySpec(secret.getBytes(), "HMACSHA256");
 	NimbusJwtDecoder decoder = NimbusJwtDecoder.withSecretKey(secretKey).macAlgorithm(MacAlgorithm.HS256).build();
-    decoder.setJwtValidator(JwtValidators.createDefaultWithIssuer("my-issuer"));
-    return decoder;
+
+	OAuth2TokenValidator<Jwt> validator = JwtValidators.createDefaultWithIssuer(issuer);
+	// here
+	decoder.setJwtValidator(validator);
+	return decoder;
     }
 
-    @Bean
+    @Bean // Change default behaviour
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	// Default Spring behaviour: PoLP (no authorization at all)
+	// Relies on JWT
+	// authorize some requests or not
+	// ???
+// V1: my version
+//	return http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
+//		.authorizeHttpRequests(authorize -> authorize.requestMatchers("/accounts", "/accounts/authenticate")
+//			.permitAll().anyRequest().authenticated())
+//		.oauth2ResourceServer((srv) -> srv.jwt(Customizer.withDefaults())).build();
 
+//	V2 : Correction by Frank
 	return http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
-
+		// Multiple matchers to map verbs + paths + authorizations
+		// "authorizations": anonymous, permit, deny and more...
+		// By configuration (filterChain), also by annotations...
 		.authorizeHttpRequests((req) -> req
 			.requestMatchers(HttpMethod.POST, "/accounts", "/accounts/authenticate").anonymous())
-
+		// Always last rule:
 		.authorizeHttpRequests((reqs) -> reqs.anyRequest().authenticated())
 		.oauth2ResourceServer((srv) -> srv.jwt(Customizer.withDefaults()))
-
+		// The build method builds the configured SecurityFilterChain
+		// with all the specified configuration
 		.build();
     }
 

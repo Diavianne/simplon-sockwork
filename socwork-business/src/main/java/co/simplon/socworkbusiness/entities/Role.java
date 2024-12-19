@@ -1,50 +1,37 @@
 package co.simplon.socworkbusiness.entities;
 
-import jakarta.persistence.*;
-
-import java.util.Objects;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "t_roles")
 public class Role extends AbstractEntity {
 
-    @Column(name = "role_name")
-    private String name;
+    @Column(name = "role")
+    private String role;
 
-    @Column(name = "default")
-    private boolean defaultRole;
-
-    public boolean isDefaultRole() {
-        return defaultRole;
-    }
+    @Column(name = "is_default")
+    private Boolean isDefault;
 
     public Role() {
-        // ORM
+	// ORM
     }
 
-    public String getName() {
-        return name;
+    public String getRole() {
+	return role;
     }
 
-    @Override
-    public String toString() {
-        return "Role [name=" + name + "]";
+    public void setRole(String role) {
+	this.role = role;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        return obj instanceof Role other
-                && this.name.equals(other.name);
-
+    public Boolean getIsDefault() {
+	return isDefault;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(name);
+    public void setIsDefault(Boolean isDefault) {
+	this.isDefault = isDefault;
     }
-
 
 }

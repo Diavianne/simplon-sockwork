@@ -39,9 +39,4 @@ public class AccountController {
     String getAccount() {
 	return service.getAccount();
     }
-
-    @GetMapping("/with-role")
-    Object withRole() {
-            return "with role";
-    }
 }
